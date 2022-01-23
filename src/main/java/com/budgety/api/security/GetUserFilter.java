@@ -20,6 +20,7 @@ public class GetUserFilter  extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Principal principal = request.getUserPrincipal();
+        System.out.println(principal.getName());
         boolean userExists = userService.userExists(principal.getName());
         if(!userExists){
             UserDto userDto = new UserDto();
