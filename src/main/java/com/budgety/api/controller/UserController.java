@@ -6,10 +6,7 @@ import com.budgety.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -28,8 +25,14 @@ public class UserController {
     @PutMapping("/me")
     public ResponseEntity<UserDto> updateUserByPrincipal(
             Principal principal,
-            @Valid @RequestBody UserUpdateRequest userUpdateRequest){
-            UserDto updatedUser = userService.updateUserByPrincipal(principal, userUpdateRequest);
-            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+            @Valid @RequestBody UserUpdateRequest userUpdateRequest) {
+        UserDto updatedUser = userService.updateUserByPrincipal(principal, userUpdateRequest);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> getUserId(Principal principal) {
+        UserDto user = userService.getUser(principal.getName());
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }

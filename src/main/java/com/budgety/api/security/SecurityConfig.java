@@ -23,21 +23,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private String issuer;
 
     @Bean
-    public GetUserFilter getUserFilter(){
+    public GetUserFilter getUserFilter() {
         return new GetUserFilter();
     }
-
 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .anyRequest()
-                .authenticated()
+                .antMatchers("/api/users/{userId}/**")
+                .access("@userSecurity.hasUserId(authentication, #userId)")
                 .and()
                 .oauth2ResourceServer()
                 .jwt()
-                .decoder(jwtDecoder());
+                .decoder(jwtDecoder()).and();
         http.addFilterAfter(getUserFilter(), FilterSecurityInterceptor.class);
     }
 

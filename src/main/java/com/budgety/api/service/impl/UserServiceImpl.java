@@ -29,6 +29,10 @@ public class UserServiceImpl implements UserService {
         return mapToDto(user);
     }
 
+    public User getUserEntity(String sub){
+        return userRepository.findBySub(sub).orElseThrow(()->new IllegalArgumentException("User not found with sub "+ sub));
+    }
+
     @Override
     public boolean userExists(String sub) {
         return userRepository.existsBySub(sub);
@@ -48,14 +52,13 @@ public class UserServiceImpl implements UserService {
         oldUser.setConfirmed(userUpdateRequest.isConfirmed());
         User updatedUser = userRepository.save(oldUser);
         return mapToDto(updatedUser);
-
     }
 
-    private UserDto mapToDto(User user){
+    public UserDto mapToDto(User user){
         return modelMapper.map(user, UserDto.class);
     }
 
-    private User mapToEntity(UserDto userDto){
+    public User mapToEntity(UserDto userDto){
         return modelMapper.map(userDto, User.class);
     }
 

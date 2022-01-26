@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Data
 @Entity
@@ -23,4 +24,6 @@ public class User extends DefaultEntity{
     private BigDecimal accountBalance;
     @Length(max = 3, message = "Provide a valid currency")
     private String currency;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Expense> expenses;
 }
