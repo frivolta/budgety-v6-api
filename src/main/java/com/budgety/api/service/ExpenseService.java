@@ -4,11 +4,12 @@ import com.budgety.api.payload.ExpenseDeleteRequest;
 import com.budgety.api.payload.ExpenseDto;
 
 import java.security.Principal;
+import java.util.List;
 
 public interface ExpenseService {
-    ExpenseDto createExpense(Principal principal, ExpenseDto expenseDto);
+    ExpenseDto createExpense(Long userId, ExpenseDto expenseDto);
     boolean deleteExpense(Long principal, Long id);
-    ExpenseDto updateExpense(Principal principal, ExpenseDto expenseDto);
-    ExpenseDto getExpenseById(Principal principal, Long id);
-    ExpenseDto getExpensesByUser(Principal principal);
+    ExpenseDto updateExpense(Long userId, Long expenseId, ExpenseDto expenseDto);
+    ExpenseDto findExpenseById(Long expenseId);
+    List<ExpenseDto> findAllExpensesByUser(Long userId);
 }

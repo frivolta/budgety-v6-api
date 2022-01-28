@@ -1,9 +1,6 @@
 package com.budgety.api.entity;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -19,9 +16,14 @@ public class Expense extends DefaultEntity{
     private long id;
     private String expenseDescription;
     private BigDecimal amount;
-    private String category;
     private ExpenseType type;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="user_id", nullable = false)
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name="category_id", nullable = false)
+    private Category category;
+
 }

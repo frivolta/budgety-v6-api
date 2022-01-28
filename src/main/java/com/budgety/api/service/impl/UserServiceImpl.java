@@ -34,6 +34,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserEntityById(Long id) {
+        return userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("User not found with sub "+ id.toString()));
+    }
+
+    @Override
     public boolean userExists(String sub) {
         return userRepository.existsBySub(sub);
     }

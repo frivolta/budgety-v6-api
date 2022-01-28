@@ -23,6 +23,7 @@ public class GetUserFilter  extends OncePerRequestFilter {
         System.out.println(principal.getName());
         boolean userExists = userService.userExists(principal.getName());
         if(!userExists){
+            
             UserDto userDto = new UserDto();
             userDto.setSub(principal.getName());
             userService.createUser(userDto);

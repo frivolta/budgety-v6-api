@@ -1,7 +1,5 @@
 package com.budgety.api.controller;
 
-import com.budgety.api.entity.User;
-import com.budgety.api.exceptions.NotAllowedException;
 import com.budgety.api.payload.ExpenseDeleteRequest;
 import com.budgety.api.payload.ExpenseDto;
 import com.budgety.api.service.ExpenseService;
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users/{userId}/expenses")
@@ -27,27 +26,29 @@ public class ExpenseController {
 
     @PostMapping()
     public ResponseEntity<ExpenseDto> createExpense(
-            Principal principal,
             @PathVariable Long userId,
-            @Valid @RequestBody ExpenseDto expenseDto) throws NotAllowedException {
-        User principalUser = userService.getUserEntity(principal.getName());
-        if (userId != principalUser.getId()) {
-            throw new NotAllowedException("Not allowed", principal.getName());
-        }
-        ExpenseDto expense = expenseService.createExpense(principal, expenseDto);
+            @Valid @RequestBody ExpenseDto expenseDto) {
+        ExpenseDto expense = expenseService.createExpense(userId, expenseDto);
         return new ResponseEntity<>(expense, HttpStatus.OK);
     }
 
+    @GetMapping()
+    public ResponseEntity<List<ExpenseDto>> getExpenses(@PathVariable Long userId){
+        List<ExpenseDto> expenses = expenseService.findAllExpensesByUser(userId);
+        return new ResponseEntity<>(expenses, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{expenseId}")
-    public ResponseEntity<ExpenseDeleteRequest> deleteExpense(Principal principal, @PathVariable Long userId, @PathVariable Long expenseId) throws NotAllowedException {
-        User principalUser = userService.getUserEntity(principal.getName());
-        if (userId != principalUser.getId()) {
-            throw new NotAllowedException("Not allowed", principal.getName());
-        }
+    public ResponseEntity<ExpenseDeleteRequest> deleteExpense(@PathVariable Long userId, @PathVariable Long expenseId) {
         expenseService.deleteExpense(expenseId, userId);
         ExpenseDeleteRequest resp = new ExpenseDeleteRequest();
         resp.setOk(true);
         return new ResponseEntity<>(resp, HttpStatus.OK);
+    }
 
+    @PutMapping("/{expenseId}")
+    public ResponseEntity<ExpenseDto> updateExpense(@PathVariable Long userId, @PathVariable Long expenseId, @RequestBody ExpenseDto expenseDto){
+        ExpenseDto updatedExpense = expenseService.updateExpense(userId, expenseId, expenseDto);
+        return new ResponseEntity<>(updatedExpense, HttpStatus.OK);
     }
 }

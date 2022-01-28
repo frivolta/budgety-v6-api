@@ -17,6 +17,7 @@ public class UserSecurity {
     }
 
     public boolean hasUserId(Authentication authentication, Long userId){
+        log.info("[UserSecurity]: Checking user id: ", userId);
         String sub = authentication.getName();
         User user = userService.getUserEntity(sub);
         Long idFromEntity = user.getId();

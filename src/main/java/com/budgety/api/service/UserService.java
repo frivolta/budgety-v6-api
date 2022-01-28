@@ -9,6 +9,7 @@ import java.security.Principal;
 public interface UserService {
     UserDto getUser(String sub);
     User getUserEntity(String sub);
+    User getUserEntityById(Long id);
     boolean userExists(String sub);
     UserDto createUser(UserDto userDto);
     UserDto updateUserByPrincipal(Principal principal, UserUpdateRequest userUpdateRequest);
