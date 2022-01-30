@@ -1,8 +1,8 @@
 package com.budgety.api.service;
 
 import com.budgety.api.entity.User;
-import com.budgety.api.payload.UserDto;
-import com.budgety.api.payload.UserUpdateRequest;
+import com.budgety.api.payload.user.UserDto;
+import com.budgety.api.payload.user.UserUpdateRequest;
 
 import java.security.Principal;
 

@@ -29,5 +29,4 @@ public class Expense extends DefaultEntity{
 
     @ManyToMany(mappedBy = "expenses")
     private Set<Budget> budgets;
-
 }

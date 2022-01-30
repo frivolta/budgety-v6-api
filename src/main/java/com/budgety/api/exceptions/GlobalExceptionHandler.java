@@ -1,6 +1,6 @@
 package com.budgety.api.exceptions;
 
-import com.budgety.api.payload.ErrorDetails;
+import com.budgety.api.payload.error.ErrorDetails;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

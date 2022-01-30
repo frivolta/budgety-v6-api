@@ -1,8 +1,7 @@
 package com.budgety.api.controller;
 
-import com.budgety.api.entity.Budget;
-import com.budgety.api.payload.BudgetDto;
-import com.budgety.api.payload.CreateBudgetRequest;
+import com.budgety.api.payload.budget.BudgetDto;
+import com.budgety.api.payload.budget.CreateBudgetRequest;
 import com.budgety.api.service.BudgetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,7 +1,7 @@
 package com.budgety.api.service.impl;
 
 import com.budgety.api.entity.User;
-import com.budgety.api.payload.UserDto;
+import com.budgety.api.payload.user.UserDto;
 import com.budgety.api.repository.UserRepository;
 
 import org.junit.jupiter.api.Test;

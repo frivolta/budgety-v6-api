@@ -2,12 +2,11 @@ package com.budgety.api.service.impl;
 
 import com.budgety.api.entity.User;
 import com.budgety.api.exceptions.ResourceNotFoundException;
-import com.budgety.api.payload.UserDto;
-import com.budgety.api.payload.UserUpdateRequest;
+import com.budgety.api.payload.user.UserDto;
+import com.budgety.api.payload.user.UserUpdateRequest;
 import com.budgety.api.repository.UserRepository;
 import com.budgety.api.service.CategoryService;
 import com.budgety.api.service.UserService;
-import com.budgety.api.utils.UserWithDefaultCategories;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

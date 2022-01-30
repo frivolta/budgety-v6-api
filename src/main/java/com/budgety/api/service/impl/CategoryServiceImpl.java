@@ -3,7 +3,7 @@ package com.budgety.api.service.impl;
 import com.budgety.api.entity.Category;
 import com.budgety.api.entity.User;
 import com.budgety.api.exceptions.ResourceNotFoundException;
-import com.budgety.api.payload.CategoryDto;
+import com.budgety.api.payload.category.CategoryDto;
 import com.budgety.api.repository.CategoryRepository;
 import com.budgety.api.repository.UserRepository;
 import com.budgety.api.service.CategoryService;
@@ -51,7 +51,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Set<Category> getCategoryEntitiesById(Set<Long> ids, Long userId) {
         List<Category> categories = categoryRepository.findAllByIdsAndUserId(ids, userId);
-        System.out.println(categories.toString());
         return new HashSet<>(categories);
     }
 

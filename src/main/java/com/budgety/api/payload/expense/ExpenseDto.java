@@ -1,4 +1,4 @@
-package com.budgety.api.payload;
+package com.budgety.api.payload.expense;
 
 import com.budgety.api.entity.Category;
 import com.budgety.api.entity.ExpenseType;

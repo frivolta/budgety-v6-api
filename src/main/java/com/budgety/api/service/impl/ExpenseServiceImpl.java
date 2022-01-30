@@ -4,7 +4,7 @@ import com.budgety.api.entity.Category;
 import com.budgety.api.entity.Expense;
 import com.budgety.api.entity.User;
 import com.budgety.api.exceptions.ResourceNotFoundException;
-import com.budgety.api.payload.ExpenseDto;
+import com.budgety.api.payload.expense.ExpenseDto;
 import com.budgety.api.repository.ExpenseRepository;
 import com.budgety.api.service.CategoryService;
 import com.budgety.api.service.ExpenseService;
@@ -13,8 +13,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,6 +77,12 @@ public class ExpenseServiceImpl implements ExpenseService {
     public List<ExpenseDto> findAllExpensesByUser(Long userId) {
         List<Expense> expenses = expenseRepository.findExpensesByUserId(userId);
         return expenses.stream().map(expense -> mapToDto(expense)).collect(Collectors.toList());
+    }
+
+    @Override
+    public Set<Expense> getExpenseEntitiesByCategoryIds(Set<Long> categoryIds, Long userId) {
+        List<Expense> expenses = expenseRepository.findExpenseByCategoriesAndUserId(categoryIds, userId);
+        return new HashSet<>(expenses);
     }
 
 

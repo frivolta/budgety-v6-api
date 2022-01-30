@@ -1,7 +1,7 @@
 package com.budgety.api.controller;
 
-import com.budgety.api.payload.ExpenseDeleteRequest;
-import com.budgety.api.payload.ExpenseDto;
+import com.budgety.api.payload.expense.ExpenseDeleteRequest;
+import com.budgety.api.payload.expense.ExpenseDto;
 import com.budgety.api.service.ExpenseService;
 import com.budgety.api.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 
 @RestController

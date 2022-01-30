@@ -1,6 +1,6 @@
 package com.budgety.api.security;
 
-import com.budgety.api.payload.UserDto;
+import com.budgety.api.payload.user.UserDto;
 import com.budgety.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.filter.OncePerRequestFilter;

@@ -1,4 +1,4 @@
-package com.budgety.api.payload;
+package com.budgety.api.payload.user;
 
 import lombok.Data;
 

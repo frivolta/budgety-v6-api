@@ -1,4 +1,4 @@
-package com.budgety.api.payload;
+package com.budgety.api.payload.category;
 
 import com.budgety.api.entity.ExpenseType;
 import lombok.Data;

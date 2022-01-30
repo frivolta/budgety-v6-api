@@ -2,7 +2,7 @@ package com.budgety.api.utils;
 
 import com.budgety.api.entity.Category;
 import com.budgety.api.entity.User;
-import com.budgety.api.payload.CategoryDto;
+import com.budgety.api.payload.category.CategoryDto;
 
 import java.util.Set;
 import java.util.stream.Collectors;

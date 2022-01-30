@@ -1,4 +1,4 @@
-package com.budgety.api.payload;
+package com.budgety.api.payload.error;
 
 import java.util.Date;
 

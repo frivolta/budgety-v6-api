@@ -1,5 +1,7 @@
-package com.budgety.api.payload;
+package com.budgety.api.payload.budget;
 
+import com.budgety.api.entity.Category;
+import com.budgety.api.entity.Expense;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -10,6 +12,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotEmpty;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Set;
 
 @Data
 public class BudgetDto {
@@ -27,4 +30,6 @@ public class BudgetDto {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date toDate;
+    private Set<Expense> expenses;
+    private Set<Category> categories;
 }

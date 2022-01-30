@@ -1,9 +1,8 @@
 package com.budgety.api.controller;
 
-import com.budgety.api.payload.UserDto;
-import com.budgety.api.payload.UserUpdateRequest;
+import com.budgety.api.payload.user.UserDto;
+import com.budgety.api.payload.user.UserUpdateRequest;
 import com.budgety.api.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

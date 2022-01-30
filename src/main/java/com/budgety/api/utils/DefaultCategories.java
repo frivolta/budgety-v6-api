@@ -1,7 +1,7 @@
 package com.budgety.api.utils;
 
 import com.budgety.api.entity.ExpenseType;
-import com.budgety.api.payload.CategoryDto;
+import com.budgety.api.payload.category.CategoryDto;
 
 import java.util.HashSet;
 import java.util.Set;

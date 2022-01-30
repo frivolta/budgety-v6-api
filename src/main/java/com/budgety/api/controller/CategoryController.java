@@ -1,6 +1,6 @@
 package com.budgety.api.controller;
 
-import com.budgety.api.payload.CategoryDto;
+import com.budgety.api.payload.category.CategoryDto;
 import com.budgety.api.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
