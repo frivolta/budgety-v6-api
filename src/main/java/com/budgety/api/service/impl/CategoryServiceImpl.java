@@ -7,10 +7,14 @@ import com.budgety.api.payload.CategoryDto;
 import com.budgety.api.repository.CategoryRepository;
 import com.budgety.api.repository.UserRepository;
 import com.budgety.api.service.CategoryService;
+import com.budgety.api.utils.DefaultCategories;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 @Service
@@ -40,6 +44,18 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public Category getCategoryEntityById(Long catId, Long userid) {
+        return categoryRepository.findByIdAndUserId(catId, userid).orElseThrow(()->new ResourceNotFoundException("category", "id", catId.toString()));
+    }
+
+    @Override
+    public Set<Category> getCategoryEntitiesById(Set<Long> ids, Long userId) {
+        List<Category> categories = categoryRepository.findAllByIdsAndUserId(ids, userId);
+        System.out.println(categories.toString());
+        return new HashSet<>(categories);
+    }
+
+    @Override
     public CategoryDto createCategory(CategoryDto categoryDto, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("user", "id", userId.toString()));
         Category category = mapToEntity(categoryDto);
@@ -48,6 +64,19 @@ public class CategoryServiceImpl implements CategoryService {
         return mapToDto(category);
     }
 
+    @Override
+    public void generateDefaultForUser(User user) {
+        Set<CategoryDto> defaultCategories = new DefaultCategories.Builder().withDefaultExpenses().withDefaultIncomes().build().getDefaultCategories();
+        defaultCategories.stream().forEach(categoryDto -> {
+            Category category = new Category();
+            category.setUser(user);
+            category.setName(categoryDto.getName());
+            category.setColor(categoryDto.getColor());
+            category.setIcon(categoryDto.getIcon());
+            category.setType(categoryDto.getType());
+            categoryRepository.save(category);
+        });
+    }
 
 
     private CategoryDto mapToDto(Category category){

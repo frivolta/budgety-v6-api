@@ -5,7 +5,9 @@ import com.budgety.api.exceptions.ResourceNotFoundException;
 import com.budgety.api.payload.UserDto;
 import com.budgety.api.payload.UserUpdateRequest;
 import com.budgety.api.repository.UserRepository;
+import com.budgety.api.service.CategoryService;
 import com.budgety.api.service.UserService;
+import com.budgety.api.utils.UserWithDefaultCategories;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +17,13 @@ import java.security.Principal;
 @Service
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
+    private CategoryService categoryService;
     private ModelMapper modelMapper;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, CategoryService categoryService) {
         this.userRepository = userRepository;
+        this.categoryService = categoryService;
         this.modelMapper = modelMapper;
     }
 
@@ -47,6 +51,7 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto userDto) {
         User user = mapToEntity(userDto);
         User newUser = userRepository.save(user);
+        categoryService.generateDefaultForUser(user);
         return this.mapToDto(newUser);
     }
 

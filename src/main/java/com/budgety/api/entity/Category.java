@@ -1,12 +1,16 @@
 package com.budgety.api.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Set;
 
-@Data
+
 @Entity
+@Getter
+@Setter
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "categories", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"id"})})
@@ -17,6 +21,7 @@ public class Category extends DefaultEntity{
     private String name;
     private String color;
     private String icon;
+    private ExpenseType type;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -24,4 +29,8 @@ public class Category extends DefaultEntity{
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Expense> expenses;
+
+    @ManyToMany(mappedBy = "categories")
+    private Set<Budget> budgets;
+
 }

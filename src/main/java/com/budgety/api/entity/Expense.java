@@ -3,6 +3,7 @@ package com.budgety.api.entity;
 import lombok.Data;
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Data
 @Entity
@@ -25,5 +26,8 @@ public class Expense extends DefaultEntity{
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="category_id", nullable = false)
     private Category category;
+
+    @ManyToMany(mappedBy = "expenses")
+    private Set<Budget> budgets;
 
 }

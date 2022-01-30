@@ -1,8 +1,11 @@
 package com.budgety.api.payload;
 
+import com.budgety.api.entity.ExpenseType;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotEmpty;
 
 @Data
@@ -17,4 +20,7 @@ public class CategoryDto {
     @NotEmpty
     @Length(min = 3, max = 50, message = "Category icon should be between 3 and 50 characters")
     private String icon;
+    @NotEmpty
+    @Enumerated(EnumType.STRING)
+    private ExpenseType type;
 }
