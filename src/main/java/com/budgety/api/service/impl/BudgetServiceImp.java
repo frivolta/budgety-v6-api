@@ -1,9 +1,6 @@
 package com.budgety.api.service.impl;
 
-import com.budgety.api.entity.Budget;
-import com.budgety.api.entity.Category;
-import com.budgety.api.entity.Expense;
-import com.budgety.api.entity.User;
+import com.budgety.api.entity.*;
 import com.budgety.api.exceptions.ResourceNotFoundException;
 import com.budgety.api.payload.budget.BudgetDto;
 import com.budgety.api.repository.BudgetRepository;
@@ -105,7 +102,9 @@ public class BudgetServiceImp implements BudgetService {
     private BigDecimal calculateLeftAmount(Set<Expense> expenses, BigDecimal initialAmount) {
         BigDecimal expensesSum = new BigDecimal(0);
         for (Expense e : expenses) {
-            expensesSum = expensesSum.add(e.getAmount());
+            if(e.getType()== ExpenseType.EXPENSE) {
+                expensesSum = expensesSum.add(e.getAmount());
+            }
         }
         return initialAmount.subtract(expensesSum);
     }

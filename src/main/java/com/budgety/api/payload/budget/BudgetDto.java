@@ -2,8 +2,13 @@ package com.budgety.api.payload.budget;
 
 import com.budgety.api.entity.Category;
 import com.budgety.api.entity.Expense;
+import com.budgety.api.payload.category.CategoryDto;
+import com.budgety.api.payload.expense.ExpenseDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -24,12 +29,13 @@ public class BudgetDto {
     @DecimalMin(value = "0.0", inclusive = false, message = "Maximum amount should be greater than zero")
     @Digits(integer = 5, fraction = 2)
     private BigDecimal maxAmount;
+    private BigDecimal leftAmount;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date fromDate;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date toDate;
-    private Set<Expense> expenses;
-    private Set<Category> categories;
+    private Set<ExpenseDto> expenses;
+    private Set<CategoryDto> categories;
 }
