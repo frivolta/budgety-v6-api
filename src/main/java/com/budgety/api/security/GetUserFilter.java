@@ -19,14 +19,14 @@ public class GetUserFilter  extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        Principal principal = request.getUserPrincipal();
-        System.out.println(principal.getName());
-        boolean userExists = userService.userExists(principal.getName());
-        if(!userExists){
-            
-            UserDto userDto = new UserDto();
-            userDto.setSub(principal.getName());
-            userService.createUser(userDto);
+        if(request.getUserPrincipal()!=null) {
+            Principal principal = request.getUserPrincipal();
+            boolean userExists = userService.userExists(principal.getName());
+            if (!userExists) {
+                UserDto userDto = new UserDto();
+                userDto.setSub(principal.getName());
+                userService.createUser(userDto);
+            }
         }
         filterChain.doFilter(request, response);
     }
