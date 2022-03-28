@@ -1,7 +1,7 @@
 package com.budgety.api.payload.expense;
 
 import com.budgety.api.entity.Category;
-import com.budgety.api.entity.ExpenseType;
+import com.budgety.api.entity.CategoryType;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -24,5 +24,5 @@ public class ExpenseDto {
     @NotEmpty
     private String categoryName;
     @Enumerated(EnumType.STRING)
-    private ExpenseType type;
+    private CategoryType type;
 }

@@ -21,7 +21,8 @@ public class Category extends DefaultEntity{
     private String name;
     private String color;
     private String icon;
-    private ExpenseType type;
+    private String slug;
+    private CategoryType type;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -33,4 +34,9 @@ public class Category extends DefaultEntity{
     @ManyToMany(mappedBy = "categories")
     private Set<Budget> budgets;
 
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<CategoryWithBudget> categoriesWithBudget;
+
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<CategoryWithBudget> categoriesWithGoal;
 }

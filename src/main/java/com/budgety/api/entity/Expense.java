@@ -21,7 +21,7 @@ public class Expense extends DefaultEntity{
     private long id;
     private String expenseDescription;
     private BigDecimal amount;
-    private ExpenseType type;
+    private CategoryType type;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="user_id", nullable = false)

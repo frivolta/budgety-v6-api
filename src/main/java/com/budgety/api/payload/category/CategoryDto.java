@@ -1,6 +1,6 @@
 package com.budgety.api.payload.category;
 
-import com.budgety.api.entity.ExpenseType;
+import com.budgety.api.entity.CategoryType;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -21,6 +21,16 @@ public class CategoryDto {
     @Length(min = 3, max = 50, message = "Category icon should be between 3 and 50 characters")
     private String icon;
     @NotEmpty
+    @Length(min = 3, max = 50, message = "Category slug cannot be empty")
+    private String slug;
+    @NotEmpty
     @Enumerated(EnumType.STRING)
-    private ExpenseType type;
+    private CategoryType type;
+
+    public void setSlug (String slug){
+        this.slug = slug.trim();
+    }
+    public String getSlug(){
+        return this.slug;
+    }
 }

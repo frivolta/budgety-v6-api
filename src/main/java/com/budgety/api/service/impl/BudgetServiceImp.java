@@ -17,6 +17,8 @@ import java.math.BigDecimal;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.budgety.api.entity.CategoryType.*;
+
 @Service
 public class BudgetServiceImp implements BudgetService {
     private BudgetRepository budgetRepository;
@@ -101,11 +103,7 @@ public class BudgetServiceImp implements BudgetService {
 
     private BigDecimal calculateLeftAmount(Set<Expense> expenses, BigDecimal initialAmount) {
         BigDecimal expensesSum = new BigDecimal(0);
-        for (Expense e : expenses) {
-            if(e.getType()== ExpenseType.EXPENSE) {
-                expensesSum = expensesSum.add(e.getAmount());
-            }
-        }
+        /////////
         return initialAmount.subtract(expensesSum);
     }
 
