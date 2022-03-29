@@ -13,7 +13,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Table(name = "categories", uniqueConstraints = {
+@Table(name = "profiles", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"id"})})
 public class Profile extends DefaultEntity{
     @Id
@@ -22,7 +22,6 @@ public class Profile extends DefaultEntity{
     private BigDecimal startingAmount;
     private String currency;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="user_id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL)
     private User user;
 }

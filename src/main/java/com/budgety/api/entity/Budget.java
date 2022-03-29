@@ -31,13 +31,6 @@ public class Budget extends DefaultEntity{
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private Set<Category> categories;
-    @ManyToMany()
-    @JoinTable(
-            name = "budget_expense",
-            joinColumns = @JoinColumn(name = "budget_id"),
-            inverseJoinColumns = @JoinColumn(name="expense_id")
-    )
-    private Set<Expense> expenses;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

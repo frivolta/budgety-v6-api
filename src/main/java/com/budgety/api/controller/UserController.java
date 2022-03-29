@@ -1,13 +1,16 @@
 package com.budgety.api.controller;
 
+import com.budgety.api.payload.profile.ProfileDto;
 import com.budgety.api.payload.user.UserDto;
 import com.budgety.api.payload.user.UserUpdateRequest;
+import com.budgety.api.service.ProfileService;
 import com.budgety.api.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.security.Principal;
 
 @RestController
@@ -16,7 +19,7 @@ public class UserController {
 
     private UserService userService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ProfileService profileService) {
         this.userService = userService;
     }
 
@@ -26,6 +29,7 @@ public class UserController {
             Principal principal,
             @Valid @RequestBody UserUpdateRequest userUpdateRequest) {
         UserDto updatedUser = userService.updateUserByPrincipal(principal, userUpdateRequest);
+
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 

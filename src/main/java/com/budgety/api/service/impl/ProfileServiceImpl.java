@@ -1,21 +1,23 @@
 package com.budgety.api.service.impl;
 
-import com.budgety.api.entity.Expense;
 import com.budgety.api.entity.Profile;
 import com.budgety.api.entity.User;
 import com.budgety.api.exceptions.ResourceNotFoundException;
-import com.budgety.api.payload.expense.ExpenseDto;
 import com.budgety.api.payload.profile.ProfileDto;
 import com.budgety.api.repository.ProfileRepository;
 import com.budgety.api.service.ProfileService;
 import com.budgety.api.service.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ProfileServiceImpl implements ProfileService {
     private ProfileRepository profileRepository;
     private UserService userService;
     private ModelMapper modelMapper;
 
+    @Autowired
     public ProfileServiceImpl(ProfileRepository profileRepository, UserService userService, ModelMapper modelMapper) {
         this.profileRepository = profileRepository;
         this.userService = userService;

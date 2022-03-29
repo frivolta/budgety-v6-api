@@ -1,6 +1,5 @@
 package com.budgety.api.service;
 
-import com.budgety.api.entity.Profile;
 import com.budgety.api.payload.profile.ProfileDto;
 
 public interface ProfileService {

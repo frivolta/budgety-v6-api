@@ -11,7 +11,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Table(name = "categories", uniqueConstraints = {
+@Table(name = "categories_with_budget", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"id"})})
 public class CategoryWithBudget extends DefaultEntity{
     @Id

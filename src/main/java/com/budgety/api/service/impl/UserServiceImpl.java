@@ -1,16 +1,23 @@
 package com.budgety.api.service.impl;
 
+import com.budgety.api.entity.Profile;
 import com.budgety.api.entity.User;
 import com.budgety.api.exceptions.ResourceNotFoundException;
+import com.budgety.api.payload.profile.ProfileDto;
 import com.budgety.api.payload.user.UserDto;
 import com.budgety.api.payload.user.UserUpdateRequest;
+import com.budgety.api.repository.ProfileRepository;
 import com.budgety.api.repository.UserRepository;
 import com.budgety.api.service.CategoryService;
+import com.budgety.api.service.ProfileService;
 import com.budgety.api.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 
 @Service
@@ -20,7 +27,8 @@ public class UserServiceImpl implements UserService {
     private ModelMapper modelMapper;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, CategoryService categoryService) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper,
+                           CategoryService categoryService) {
         this.userRepository = userRepository;
         this.categoryService = categoryService;
         this.modelMapper = modelMapper;
@@ -48,9 +56,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(UserDto userDto) {
+        Profile profile = new Profile();
+        profile.setStartingAmount(new BigDecimal(0));
+        profile.setCurrency("$");
         User user = mapToEntity(userDto);
-        User newUser = userRepository.save(user);
-        categoryService.generateDefaultForUser(user);
+        user.setProfile(profile);
+        User newUser = userRepository.saveAndFlush(user);
+        categoryService.generateDefaultForUser(newUser);
         return this.mapToDto(newUser);
     }
 

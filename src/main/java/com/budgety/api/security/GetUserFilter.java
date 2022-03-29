@@ -1,11 +1,7 @@
 package com.budgety.api.security;
 
-import com.budgety.api.payload.metadata.UserMetadataDTO;
 import com.budgety.api.payload.user.UserDto;
 import com.budgety.api.service.UserService;
-import com.nimbusds.jose.shaded.json.JSONObject;
-import com.nimbusds.oauth2.sdk.ErrorResponse;
-import netscape.javascript.JSObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.http.HttpStatus;
@@ -15,12 +11,8 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;

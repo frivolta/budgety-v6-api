@@ -1,14 +1,9 @@
 package com.budgety.api.payload.budget;
 
-import com.budgety.api.entity.Category;
-import com.budgety.api.entity.Expense;
 import com.budgety.api.payload.category.CategoryDto;
-import com.budgety.api.payload.expense.ExpenseDto;
+import com.budgety.api.payload.transaction.TransactionDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -36,6 +31,6 @@ public class BudgetDto {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date toDate;
-    private Set<ExpenseDto> expenses;
+    private Set<TransactionDto> expenses;
     private Set<CategoryDto> categories;
 }

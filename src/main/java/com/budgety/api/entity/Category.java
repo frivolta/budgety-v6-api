@@ -1,6 +1,5 @@
 package com.budgety.api.entity;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,7 +28,7 @@ public class Category extends DefaultEntity{
     private User user;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Expense> expenses;
+    private Set<Transaction> expens;
 
     @ManyToMany(mappedBy = "categories")
     private Set<Budget> budgets;

@@ -65,7 +65,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void generateDefaultForUser(User user) {
-        Set<CategoryDto> defaultCategories = new DefaultCategories.Builder().withDefaultExpenses().withDefaultIncomes().build().getDefaultCategories();
+        Set<CategoryDto> defaultCategories = new DefaultCategories.Builder()
+                .withDefaultExpenses()
+                .withDefaultIncomes()
+                .withDefaultSavings()
+                .build().getDefaultCategories();
         defaultCategories.stream().forEach(categoryDto -> {
             Category category = new Category();
             category.setUser(user);

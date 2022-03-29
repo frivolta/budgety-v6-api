@@ -26,7 +26,7 @@ public class User extends DefaultEntity{
     private String currency;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Expense> expenses;
+    private Set<Transaction> expens;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Category> categories;
