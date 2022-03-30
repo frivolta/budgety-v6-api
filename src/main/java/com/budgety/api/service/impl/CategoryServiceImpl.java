@@ -1,6 +1,7 @@
 package com.budgety.api.service.impl;
 
 import com.budgety.api.entity.Category;
+import com.budgety.api.entity.CategoryType;
 import com.budgety.api.entity.User;
 import com.budgety.api.exceptions.ResourceNotFoundException;
 import com.budgety.api.payload.category.CategoryDto;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -38,10 +40,6 @@ public class CategoryServiceImpl implements CategoryService {
         return mapToDto(category);
     }
 
-    @Override
-    public Category getCategoryEntityByName(String name, Long userid) {
-        return categoryRepository.findByNameAndUserId(name, userid).orElseThrow(()->new ResourceNotFoundException("category", "name", name));
-    }
 
     @Override
     public Category getCategoryEntityById(Long catId, Long userid) {
@@ -49,9 +47,46 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public CategoryDto getCategoryById(Long catId, Long userid) {
+        return mapToDto(getCategoryEntityById(catId, userid));
+    }
+
+    @Override
     public Set<Category> getCategoryEntitiesById(Set<Long> ids, Long userId) {
         List<Category> categories = categoryRepository.findAllByIdsAndUserId(ids, userId);
         return new HashSet<>(categories);
+    }
+
+    @Override
+    public List<CategoryDto> getCategoryEntitiesByUserId(Long userId) {
+        List<Category> categories = categoryRepository.findAllByUserId(userId);
+        List<CategoryDto> categoriesDtos = categories.stream().map(c->mapToDto(c)).collect(Collectors.toList());
+        return categoriesDtos;
+    }
+
+    @Override
+    public List<CategoryDto> getCategoriesByType(Long userId, CategoryType categoryType) {
+        List<Category> categories = categoryRepository.findAllByCategoryType(userId, categoryType);
+        List<CategoryDto> categoryDtos = categories.stream().map(c->mapToDto(c)).collect(Collectors.toList());
+        return categoryDtos;
+    }
+
+    @Override
+    public CategoryDto updateCategoryById(Long userId, Long categoryId, CategoryDto categoryDto) {
+        Category category = getCategoryEntityById(categoryId, userId);
+        category.setColor(categoryDto.getColor());
+        category.setName(categoryDto.getName());
+        category.setIcon(categoryDto.getIcon());
+        category.setSlug(categoryDto.getName());
+        Category updatedCategory = categoryRepository.save(category);
+        return mapToDto(updatedCategory);
+    }
+
+    @Override
+    public boolean deleteCategoryById(Long userId, Long categoryId) {
+        Category category = getCategoryEntityById(categoryId, userId);
+        categoryRepository.delete(category);
+        return true;
     }
 
     @Override

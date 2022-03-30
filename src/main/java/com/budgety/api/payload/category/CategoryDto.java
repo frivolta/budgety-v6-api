@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 public class CategoryDto {
@@ -23,14 +24,7 @@ public class CategoryDto {
     @NotEmpty
     @Length(min = 3, max = 50, message = "Category slug cannot be empty")
     private String slug;
-    @NotEmpty
+    @NotNull
     @Enumerated(EnumType.STRING)
     private CategoryType type;
-
-    public void setSlug (String slug){
-        this.slug = slug.trim();
-    }
-    public String getSlug(){
-        return this.slug;
-    }
 }
