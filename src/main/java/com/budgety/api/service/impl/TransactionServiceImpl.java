@@ -39,7 +39,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionDto createTransaction(Long userId, TransactionDto transactionDto) {
         User user = userService.getUserEntityById(userId);
-        Category category = categoryService.getCategoryEntityByName(transactionDto.getCategoryName(), user.getId());
+        Category category = categoryService.getCategoryEntityById(transactionDto.getCategoryId(), user.getId());
         Transaction transaction = mapToEntity(transactionDto);
         transaction.setUser(user);
         transaction.setCategory(category);
@@ -57,9 +57,10 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionDto updateTransaction(Long userId, Long expenseId, TransactionDto transactionDto) {
         Transaction transaction = transactionRepository.findTransactionByIdAndUserId(expenseId, userId);
-        Category category = categoryService.getCategoryEntityByName(transactionDto.getCategoryName(), userId);
+        Category category = categoryService.getCategoryEntityById(transactionDto.getCategoryId(), userId);
         transaction.setTransactionDescription(transactionDto.getTransactionDescription());
         transaction.setAmount(transactionDto.getAmount());
+        transaction.setDate(transactionDto.getDate());
         transaction.setCategory(category);
         transaction.setTransactionType(transactionDto.getType());
         transactionRepository.save(transaction);

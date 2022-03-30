@@ -24,7 +24,7 @@ public class TransactionController {
     }
 
     @PostMapping()
-    public ResponseEntity<TransactionDto> createExpense(
+    public ResponseEntity<TransactionDto> createTransaction(
             @PathVariable Long userId,
             @Valid @RequestBody TransactionDto transactionDto) {
         TransactionDto expense = transactionService.createTransaction(userId, transactionDto);
@@ -32,13 +32,13 @@ public class TransactionController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<TransactionDto>> getExpenses(@PathVariable Long userId){
+    public ResponseEntity<List<TransactionDto>> getTransactions(@PathVariable Long userId){
         List<TransactionDto> expenses = transactionService.findAllTransactionsByUserId(userId);
         return new ResponseEntity<>(expenses, HttpStatus.OK);
     }
 
     @DeleteMapping("/{transactionId}")
-    public ResponseEntity<TransactionDeleteRequest> deleteExpense(@PathVariable Long userId, @PathVariable Long transactionId) {
+    public ResponseEntity<TransactionDeleteRequest> deleteTransaction(@PathVariable Long userId, @PathVariable Long transactionId) {
         transactionService.deleteTransaction(transactionId, userId);
         TransactionDeleteRequest resp = new TransactionDeleteRequest();
         resp.setOk(true);
@@ -46,8 +46,8 @@ public class TransactionController {
     }
 
     @PutMapping("/{transactionId}")
-    public ResponseEntity<TransactionDto> updateExpense(@PathVariable Long userId, @PathVariable Long transactionId, @RequestBody TransactionDto transactionDto){
-        TransactionDto updatedExpense = transactionService.updateTransaction(userId, transactionId, transactionDto);
-        return new ResponseEntity<>(updatedExpense, HttpStatus.OK);
+    public ResponseEntity<TransactionDto> updateTransaction(@PathVariable Long userId, @PathVariable Long transactionId, @RequestBody TransactionDto transactionDto){
+        TransactionDto updatedTransaction = transactionService.updateTransaction(userId, transactionId, transactionDto);
+        return new ResponseEntity<>(updatedTransaction, HttpStatus.OK);
     }
 }

@@ -13,7 +13,7 @@ import java.util.Date;
 @Setter
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Table(name = "expenses", uniqueConstraints = {
+@Table(name = "transactions", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"id"}),
 })
 public class Transaction extends DefaultEntity{

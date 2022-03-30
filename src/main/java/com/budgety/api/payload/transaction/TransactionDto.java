@@ -10,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,8 +27,8 @@ public class TransactionDto {
     private BigDecimal amount;
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date date;
-    @NotEmpty
-    private String categoryName;
+    @NotNull(message = "Category id cannot be null")
+    private Long categoryId;
     @Enumerated(EnumType.STRING)
     private CategoryType type;
 }
