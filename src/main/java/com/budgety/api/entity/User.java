@@ -32,7 +32,7 @@ public class User extends DefaultEntity{
     private Set<Category> categories;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Budget> budgets;
+    private Set<MonthlyBudget> monthlyBudgets;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="profile_id", referencedColumnName = "id")
