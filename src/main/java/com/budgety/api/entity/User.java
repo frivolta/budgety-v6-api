@@ -26,12 +26,16 @@ public class User extends DefaultEntity{
     private String currency;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Expense> expenses;
+    private Set<Transaction> expens;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Category> categories;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Budget> budgets;
+    private Set<MonthlyBudget> monthlyBudgets;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="profile_id", referencedColumnName = "id")
+    private Profile profile;
 
 }
