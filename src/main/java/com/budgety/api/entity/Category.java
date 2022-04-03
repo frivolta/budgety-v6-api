@@ -28,7 +28,7 @@ public class Category extends DefaultEntity{
     private User user;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Transaction> expens;
+    private Set<Transaction> transactions;
 
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

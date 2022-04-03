@@ -13,14 +13,13 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "categories_with_budget", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"id"})})
-public class CategoryWithBudget extends DefaultEntity{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class CategoryWithBudget extends EnrichedCategory{
     private BigDecimal budget;
-    private BigDecimal currentAmount;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="category_id", nullable = false)
-    private Category category;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @OneToMany(mappedBy = "categoryWithBudget")
+    private Set<Transaction> transactions;
 }

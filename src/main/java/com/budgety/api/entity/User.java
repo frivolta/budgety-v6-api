@@ -34,6 +34,9 @@ public class User extends DefaultEntity{
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<MonthlyBudget> monthlyBudgets;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<EnrichedCategory> enrichedCategories;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="profile_id", referencedColumnName = "id")
     private Profile profile;

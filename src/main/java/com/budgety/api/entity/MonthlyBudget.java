@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Set;
 
 @Data
 @Entity
@@ -22,7 +23,13 @@ public class MonthlyBudget extends DefaultEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    //private CategoryWithBudget expenseCategories;
-    //private CategoryWithGoal incomeCategories;
-    //private CategoryWithGoal savingCategories;
+
+    @OneToMany(mappedBy = "monthlyBudget", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<CategoryWithBudget> categoriesWithBudget;
+
+    @OneToMany(mappedBy = "monthlyBudget", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<CategoryWithBudget> categoriesWithGoal;
+
+    @OneToMany(mappedBy = "monthlyBudget", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Transaction> transactions;
 }

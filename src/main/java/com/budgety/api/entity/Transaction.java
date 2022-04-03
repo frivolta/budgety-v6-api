@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -33,4 +34,12 @@ public class Transaction extends DefaultEntity{
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="category_id", nullable = false)
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "enriched_category_id")
+    private EnrichedCategory enrichedCategory ;
+
+    @ManyToOne
+    @JoinColumn(name = "monthly_budget_id")
+    private MonthlyBudget monthlyBudget;
 }
