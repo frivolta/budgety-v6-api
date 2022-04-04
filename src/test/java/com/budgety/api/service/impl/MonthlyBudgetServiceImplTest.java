@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -35,7 +36,6 @@ class MonthlyBudgetServiceImplTest {
     @Mock
     private ModelMapper modelMapper;
 
-    private SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
     private String mockStartDate = "01-03-2022";
     private String mockEndDate = "31-03-2022";
 
@@ -43,13 +43,14 @@ class MonthlyBudgetServiceImplTest {
     private MonthlyBudgetDto dto = new MonthlyBudgetDto();
 
     @BeforeEach
-    public void setUp() throws ParseException {
+    public void setUp() {
         dto.setId(1L);
         entity.setId(1L);
-        dto.setStartDate(formatter.parse(mockStartDate));
-        entity.setStartDate(formatter.parse(mockStartDate));
-        dto.setEndDate(formatter.parse(mockEndDate));
-        entity.setEndDate(formatter.parse(mockEndDate));
+        dto.setStartDate(LocalDate.parse(mockStartDate, MonthlyBudgetDto.formatters));
+
+        entity.setStartDate(LocalDate.parse(mockStartDate, MonthlyBudgetDto.formatters));
+        dto.setEndDate(LocalDate.parse(mockEndDate, MonthlyBudgetDto.formatters));
+        entity.setEndDate(LocalDate.parse(mockEndDate, MonthlyBudgetDto.formatters));
     }
 
 

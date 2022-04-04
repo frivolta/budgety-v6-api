@@ -1,7 +1,9 @@
 package com.budgety.api.payload.monthlyBudget;
 
 import com.budgety.api.entity.EnrichedCategory;
+import com.budgety.api.entity.Transaction;
 import com.budgety.api.payload.enrichedCategory.EnrichedCategoryDto;
+import com.budgety.api.payload.transaction.TransactionDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -11,14 +13,15 @@ import org.springframework.lang.Nullable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Set;
 
 @Getter
 @Setter
 public class MonthlyBudgetDto {
-    private static final SimpleDateFormat dateFormat
-            = new SimpleDateFormat("dd-MM-yyyy");
+    public final static DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private Long id;
     @JsonFormat(pattern="dd-MM-yyyy")
     private String startDate;
@@ -26,33 +29,32 @@ public class MonthlyBudgetDto {
     private String endDate;
 
     private Set<EnrichedCategoryDto> enrichedCategories;
+    private Set<TransactionDto> transactions;
 
-    public void setStartDate(Date date){
+    public void setStartDate(LocalDate date){
         this.startDate = dateToString(date);
     }
 
-    public void setEndDate(Date date){
+    public void setEndDate(LocalDate date){
         this.endDate = dateToString(date);
     }
-    public void setEndDate(String string){
-        this.endDate=string;
-    }
 
-    public Date getStartDate() throws ParseException {
+
+    public LocalDate getStartDate() throws ParseException {
         return stringToDate(this.startDate);
     }
 
-    public Date getEndDate() throws ParseException {
+    public LocalDate getEndDate() throws ParseException {
         return stringToDate(this.endDate);
     }
 
     // Convert methods
-    private Date stringToDate(String inputString) throws ParseException {
-        return dateFormat.parse(inputString);
+    private LocalDate stringToDate(String inputString) {
+        return LocalDate.parse(inputString, formatters);
     }
 
-    private String dateToString(Date inputDate){
-        return dateFormat.format(inputDate);
+    private String dateToString(LocalDate inputDate){
+        return inputDate.format(formatters);
     }
 
 }

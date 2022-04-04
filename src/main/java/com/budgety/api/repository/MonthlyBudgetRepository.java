@@ -16,8 +16,9 @@ public interface MonthlyBudgetRepository extends JpaRepository<MonthlyBudget,Lon
     @Query("select m from MonthlyBudget m where m.id=:budgetId and m.user.id = :userId")
     Optional<MonthlyBudget> findByIdAnUserId(Long userId, Long budgetId);
     @Query("select m from MonthlyBudget m where m.user.id=:userId and m.startDate <=:date and m.endDate>=:date")
-    Optional<MonthlyBudget> findByDate(Date date, Long userId);
+    Optional<MonthlyBudget> findByDate(LocalDate date, Long userId);
     @Query("select case when (count(m)>0) then true else false end from MonthlyBudget m where m.user.id=:userId and m.startDate=:startDate and m.endDate=:endDate")
-    Boolean existsByDate(Date startDate, Date endDate, Long userId);
-
+    Boolean existsByDate(LocalDate startDate, LocalDate endDate, Long userId);
+    @Query("select case when (count(m)>0) then true else false end from MonthlyBudget m where m.user.id=:userId and :date between m.startDate and m.endDate")
+    Boolean existsByDateRange(LocalDate date, Long userId);
 }

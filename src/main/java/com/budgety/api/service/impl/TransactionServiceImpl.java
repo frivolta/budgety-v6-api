@@ -4,15 +4,21 @@ import com.budgety.api.entity.Category;
 import com.budgety.api.entity.Transaction;
 import com.budgety.api.entity.User;
 import com.budgety.api.exceptions.ResourceNotFoundException;
+import com.budgety.api.payload.monthlyBudget.MonthlyBudgetDto;
 import com.budgety.api.payload.transaction.TransactionDto;
+import com.budgety.api.repository.MonthlyBudgetRepository;
 import com.budgety.api.repository.TransactionRepository;
 import com.budgety.api.service.CategoryService;
+import com.budgety.api.service.MonthlyBudgetService;
 import com.budgety.api.service.TransactionService;
 import com.budgety.api.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,25 +31,50 @@ public class TransactionServiceImpl implements TransactionService {
     private CategoryService categoryService;
     private UserService userService;
     private ModelMapper modelMapper;
+    private MonthlyBudgetRepository monthlyBudgetRepository;
+    private MonthlyBudgetService monthlyBudgetService;
 
     @Autowired
     public TransactionServiceImpl(TransactionRepository transactionRepository,
                                   UserService userService, ModelMapper modelMapper,
-                                  CategoryService categoryService) {
+                                  CategoryService categoryService,
+                                  MonthlyBudgetRepository monthlyBudgetRepository,
+                                  MonthlyBudgetService monthlyBudgetService
+    ) {
         this.transactionRepository = transactionRepository;
         this.modelMapper = modelMapper;
         this.userService = userService;
         this.categoryService=categoryService;
+        this.monthlyBudgetRepository = monthlyBudgetRepository;
+        this.monthlyBudgetService = monthlyBudgetService;
+    }
+
+
+    @Override
+    @Transactional
+    public void checkForMonthlyBudget(Long userId, Transaction transaction) throws ParseException {
+        LocalDate tDate = transaction.getDate();
+        LocalDate startDate = tDate.withDayOfMonth(1);
+        LocalDate endDate = tDate.withDayOfMonth(tDate.lengthOfMonth());
+        boolean isExists = monthlyBudgetRepository.existsByDateRange(tDate, userId);
+        if(!isExists){
+            MonthlyBudgetDto monthlyBudgetDto = new MonthlyBudgetDto();
+            monthlyBudgetDto.setStartDate(startDate);
+            monthlyBudgetDto.setEndDate(endDate);
+            monthlyBudgetService.createMonthlyBudget(userId, monthlyBudgetDto);
+        }
+        // else add transaction to monthly budget
     }
 
     @Override
-    public TransactionDto createTransaction(Long userId, TransactionDto transactionDto) {
+    public TransactionDto createTransaction(Long userId, TransactionDto transactionDto) throws ParseException {
         User user = userService.getUserEntityById(userId);
         Category category = categoryService.getCategoryEntityById(transactionDto.getCategoryId(), user.getId());
         Transaction transaction = mapToEntity(transactionDto);
         transaction.setUser(user);
         transaction.setCategory(category);
         Transaction newTransaction = transactionRepository.save(transaction);
+        checkForMonthlyBudget(userId, newTransaction);
         return mapToDto(newTransaction);
     }
 

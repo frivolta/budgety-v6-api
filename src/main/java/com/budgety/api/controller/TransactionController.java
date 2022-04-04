@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -26,7 +27,7 @@ public class TransactionController {
     @PostMapping()
     public ResponseEntity<TransactionDto> createTransaction(
             @PathVariable Long userId,
-            @Valid @RequestBody TransactionDto transactionDto) {
+            @Valid @RequestBody TransactionDto transactionDto) throws ParseException {
         TransactionDto expense = transactionService.createTransaction(userId, transactionDto);
         return new ResponseEntity<>(expense, HttpStatus.OK);
     }
@@ -46,7 +47,7 @@ public class TransactionController {
     }
 
     @PutMapping("/{transactionId}")
-    public ResponseEntity<TransactionDto> updateTransaction(@PathVariable Long userId, @PathVariable Long transactionId, @RequestBody TransactionDto transactionDto){
+    public ResponseEntity<TransactionDto> updateTransaction(@PathVariable Long userId, @PathVariable Long transactionId,@Valid @RequestBody TransactionDto transactionDto){
         TransactionDto updatedTransaction = transactionService.updateTransaction(userId, transactionId, transactionDto);
         return new ResponseEntity<>(updatedTransaction, HttpStatus.OK);
     }

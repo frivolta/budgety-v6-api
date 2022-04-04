@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -17,8 +18,6 @@ import java.util.Set;
 @RequestMapping("/api/users/{userId}/monthly-budget")
 public class MonthlyBudgetController {
     private MonthlyBudgetService monthlyBudgetService;
-    private static final SimpleDateFormat dateFormat
-            = new SimpleDateFormat("dd-MM-yyyy");
 
     public MonthlyBudgetController(MonthlyBudgetService monthlyBudgetService) {
         this.monthlyBudgetService = monthlyBudgetService;
@@ -73,7 +72,7 @@ public class MonthlyBudgetController {
             @PathVariable Long userId,
             @PathVariable String dateAsString
             ) throws ParseException {
-        Date parsedDate = dateFormat.parse(dateAsString);
+        LocalDate parsedDate = LocalDate.parse(dateAsString, MonthlyBudgetDto.formatters);
         MonthlyBudgetDto dto = monthlyBudgetService.getMonthlyBudgetByDate(userId, parsedDate);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }

@@ -1,14 +1,12 @@
 package com.budgety.api.service.impl;
 
-import com.budgety.api.entity.Category;
-import com.budgety.api.entity.EnrichedCategory;
-import com.budgety.api.entity.MonthlyBudget;
-import com.budgety.api.entity.User;
+import com.budgety.api.entity.*;
 import com.budgety.api.exceptions.ResourceNotFoundException;
 import com.budgety.api.payload.monthlyBudget.MonthlyBudgetDto;
 import com.budgety.api.repository.CategoryRepository;
 import com.budgety.api.repository.EnrichedCategoryRepository;
 import com.budgety.api.repository.MonthlyBudgetRepository;
+import com.budgety.api.repository.TransactionRepository;
 import com.budgety.api.service.MonthlyBudgetService;
 import com.budgety.api.service.UserService;
 import com.budgety.api.utils.MonthlyBudgetHelper;
@@ -16,8 +14,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -30,17 +30,20 @@ public class MonthlyBudgetServiceImpl implements MonthlyBudgetService {
     private ModelMapper modelMapper;
     private CategoryRepository categoryRepository;
     private EnrichedCategoryRepository enrichedCategoryRepository;
+    private TransactionRepository transactionRepository;
 
     @Autowired
-    public MonthlyBudgetServiceImpl(MonthlyBudgetRepository monthlyBudgetRepository,EnrichedCategoryRepository enrichedCategoryRepository,CategoryRepository categoryRepository, UserService userService, ModelMapper modelMapper) {
+    public MonthlyBudgetServiceImpl(MonthlyBudgetRepository monthlyBudgetRepository,TransactionRepository transactionRepository, EnrichedCategoryRepository enrichedCategoryRepository,CategoryRepository categoryRepository, UserService userService, ModelMapper modelMapper) {
         this.monthlyBudgetRepository = monthlyBudgetRepository;
         this.userService = userService;
         this.modelMapper = modelMapper;
         this.categoryRepository = categoryRepository;
         this.enrichedCategoryRepository = enrichedCategoryRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     @Override
+    @Transactional
     public MonthlyBudgetDto createMonthlyBudget(Long userId, MonthlyBudgetDto monthlyBudgetDto) {
         try {
             // Check if monthly budget is already created
@@ -48,17 +51,26 @@ public class MonthlyBudgetServiceImpl implements MonthlyBudgetService {
             if (monthlyBudgetRepository.existsByDate(monthlyBudget.getStartDate(), monthlyBudget.getEndDate(), userId)) {
                 throw new IllegalArgumentException("A budget already exists for this month");
             }
+
             // Get user
             User user = userService.getUserEntityById(userId);
-            // Add user to monthly budget and save it
             monthlyBudget.setUser(user);
             MonthlyBudget savedMonthlyBudget = monthlyBudgetRepository.save(monthlyBudget);
+
             //Create enriched categories for all categories
             List<Category> categories = categoryRepository.findAllByUserId(userId);
             Set<EnrichedCategory> enrichedCategories =
                     MonthlyBudgetHelper.generateEnrichedCategoriesFromCategories(categories, user, monthlyBudget);
-            enrichedCategoryRepository.saveAll(enrichedCategories);
-            // return the monthly budgets
+            Set<EnrichedCategory> savedEnrichedCategories = enrichedCategoryRepository.saveAll(enrichedCategories).stream().collect(Collectors.toSet());
+
+            // Get already defined transactions and insert them into monthly budget
+            List<Transaction> transactions = transactionRepository
+                    .findTransactionsByDateRangeAndUserId(monthlyBudget.getStartDate(), monthlyBudget.getEndDate(), userId);
+            Set<Transaction> transactionsWithBudget = MonthlyBudgetHelper.addMonthlyBudgetToTransactions(transactions, monthlyBudget);
+            Set<Transaction> transactionsWithBudgetAndEnrichedCategories = MonthlyBudgetHelper.addEnrichedCategoriesToTransactions(transactionsWithBudget, savedEnrichedCategories);
+            transactionRepository.saveAll(transactionsWithBudgetAndEnrichedCategories);
+
+            // return the monthly budget
             return mapToDto(savedMonthlyBudget);
         }catch(ParseException  e){
             throw new IllegalArgumentException(e.getMessage());
@@ -82,7 +94,7 @@ public class MonthlyBudgetServiceImpl implements MonthlyBudgetService {
     }
 
     @Override
-    public MonthlyBudgetDto getMonthlyBudgetByDate(Long userId, Date date) {
+    public MonthlyBudgetDto getMonthlyBudgetByDate(Long userId, LocalDate date) {
         MonthlyBudget monthlyBudget = monthlyBudgetRepository.findByDate(date, userId)
                 .orElseThrow(()->new ResourceNotFoundException("monthly budget", "date", date.toString()));
         return mapToDto(monthlyBudget);

@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -25,8 +26,7 @@ public class Transaction extends DefaultEntity{
     private String transactionDescription;
     private BigDecimal amount;
     private CategoryType transactionType;
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private Date date;
+    private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="user_id", nullable = false)

@@ -14,6 +14,8 @@ import com.budgety.api.service.EnrichedCategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class EnrichedCategoryServiceImpl implements EnrichedCategoryService {
     private MonthlyBudgetRepository monthlyBudgetRepository;
@@ -30,14 +32,25 @@ public class EnrichedCategoryServiceImpl implements EnrichedCategoryService {
         this.userRepository = userRepository;
     }
 
+    private boolean isEnrichedCategoryAlreadyInBudget(MonthlyBudget monthlyBudget, Category category){
+        return monthlyBudget.getEnrichedCategories().stream().anyMatch(enrichedCategory -> enrichedCategory.getCategory().getId() == category.getId());
+    }
+
     @Override
+    @Transactional
     public EnrichedCategoryDto createEnrichedCategoryInBudget(Long userId, Long budgetId, EnrichedCategoryDto enrichedCategoryDto) {
+
         MonthlyBudget monthlyBudget = monthlyBudgetRepository.findByIdAnUserId(userId, budgetId)
                 .orElseThrow(()->new ResourceNotFoundException("monthly budget", "id", budgetId.toString()));
 
         Category category = categoryRepository.findByIdAndUserId(enrichedCategoryDto.getCategoryId(), userId)
                 .orElseThrow(()->new ResourceNotFoundException("category", "id", enrichedCategoryDto.getCategoryId().toString()));
 
+        // Check if in the given monthly budget an enriched category with the same category is already present
+        boolean isAlreadyInMonthlyBudget = isEnrichedCategoryAlreadyInBudget(monthlyBudget, category);
+        if(isAlreadyInMonthlyBudget){
+            throw new IllegalArgumentException("Enriched category with the same category already present in monthly budget");
+        }
         User user = userRepository.getById(userId);
         EnrichedCategory enrichedCategory = mapToEntity(enrichedCategoryDto);
         enrichedCategory.setMonthlyBudget(monthlyBudget);
