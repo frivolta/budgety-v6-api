@@ -25,10 +25,7 @@ public class MonthlyBudget extends DefaultEntity {
     private User user;
 
     @OneToMany(mappedBy = "monthlyBudget", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<CategoryWithBudget> categoriesWithBudget;
-
-    @OneToMany(mappedBy = "monthlyBudget", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<CategoryWithBudget> categoriesWithGoal;
+    private Set<EnrichedCategory> enrichedCategories;
 
     @OneToMany(mappedBy = "monthlyBudget", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Transaction> transactions;

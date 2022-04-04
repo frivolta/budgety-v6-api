@@ -1,5 +1,6 @@
 package com.budgety.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,11 +36,11 @@ public class Transaction extends DefaultEntity{
     @JoinColumn(name="category_id", nullable = false)
     private Category category;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "enriched_category_id")
     private EnrichedCategory enrichedCategory ;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "monthly_budget_id")
     private MonthlyBudget monthlyBudget;
 }

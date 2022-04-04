@@ -21,11 +21,11 @@ public class EnrichedCategory extends DefaultEntity {
     private BigDecimal budgetOrGoal;
     private CategoryType type;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="category_id", nullable = false)
     private Category category;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="monthly_budget_id", nullable = false)
     private MonthlyBudget monthlyBudget;
 
@@ -33,6 +33,6 @@ public class EnrichedCategory extends DefaultEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "enrichedCategory")
+    @OneToMany(mappedBy = "enrichedCategory", fetch = FetchType.LAZY)
     private Set<Transaction> transactions;
 }

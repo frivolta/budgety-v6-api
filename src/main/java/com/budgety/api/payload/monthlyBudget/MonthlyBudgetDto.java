@@ -1,13 +1,18 @@
 package com.budgety.api.payload.monthlyBudget;
 
+import com.budgety.api.entity.EnrichedCategory;
+import com.budgety.api.payload.enrichedCategory.EnrichedCategoryDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,6 +24,8 @@ public class MonthlyBudgetDto {
     private String startDate;
     @JsonFormat(pattern="dd-MM-yyyy")
     private String endDate;
+
+    private Set<EnrichedCategoryDto> enrichedCategories;
 
     public void setStartDate(Date date){
         this.startDate = dateToString(date);
