@@ -4,7 +4,7 @@ import com.budgety.api.entity.Profile;
 import com.budgety.api.entity.User;
 import com.budgety.api.exceptions.ResourceNotFoundException;
 import com.budgety.api.payload.profile.ProfileDto;
-import com.budgety.api.repository.ProfileRepository;
+import com.budgety.api.repositories.ProfileRepository;
 import com.budgety.api.service.ProfileService;
 import com.budgety.api.service.UserService;
 import org.modelmapper.ModelMapper;

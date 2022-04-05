@@ -1,4 +1,4 @@
-package com.budgety.api.repository;
+package com.budgety.api.repositories;
 
 import com.budgety.api.entity.EnrichedCategory;
 import org.springframework.data.jpa.repository.JpaRepository;

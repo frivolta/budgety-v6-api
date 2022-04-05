@@ -1,7 +1,6 @@
 package com.budgety.api.security;
 
 import com.budgety.api.entity.User;
-import com.budgety.api.repository.UserRepository;
 import com.budgety.api.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

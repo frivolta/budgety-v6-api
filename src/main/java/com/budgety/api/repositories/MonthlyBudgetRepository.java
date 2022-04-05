@@ -1,14 +1,12 @@
-package com.budgety.api.repository;
+package com.budgety.api.repositories;
 
 import com.budgety.api.entity.MonthlyBudget;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface MonthlyBudgetRepository extends JpaRepository<MonthlyBudget,Long> {
     @Query("select m from MonthlyBudget  m where m.user.id = :userId")

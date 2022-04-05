@@ -1,4 +1,4 @@
-package com.budgety.api.repository;
+package com.budgety.api.repositories;
 
 import com.budgety.api.entity.Category;
 import com.budgety.api.entity.CategoryType;
