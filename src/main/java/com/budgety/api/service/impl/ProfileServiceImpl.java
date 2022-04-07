@@ -38,6 +38,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public ProfileDto getProfileById(Long userId) {
+        System.out.println("Called with"+ userId);
         Profile profile =  profileRepository.findProfileByUserId(userId).orElseThrow(
                 ()-> new ResourceNotFoundException("Profile", "with user id", userId.toString())
         );

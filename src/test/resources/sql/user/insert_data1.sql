@@ -1,0 +1,2 @@
+insert into users (id, created_at, updated_at, account_balance, confirmed, currency, email, profile_id, sub)
+values (1, '2022-04-06 14:49:07', '2022-04-06 14:49:07', null, false, null,'email@email.com', 1, 'test_user');
