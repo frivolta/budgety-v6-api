@@ -6,4 +6,4 @@ RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 COPY seedJob.xml /usr/share/jenkins/ref/jobs/seed-job/config.xml
 
 #ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
-#88e56583000d4486bb2339ab840cdcf6
+#96b393b0e3c94a81883f24e7ee48e929
