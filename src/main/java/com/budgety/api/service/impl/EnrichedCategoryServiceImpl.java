@@ -1,9 +1,6 @@
 package com.budgety.api.service.impl;
 
-import com.budgety.api.entity.Category;
-import com.budgety.api.entity.EnrichedCategory;
-import com.budgety.api.entity.MonthlyBudget;
-import com.budgety.api.entity.User;
+import com.budgety.api.entity.*;
 import com.budgety.api.exceptions.ResourceNotFoundException;
 import com.budgety.api.payload.enrichedCategory.EnrichedCategoryDto;
 import com.budgety.api.repositories.CategoryRepository;
@@ -15,6 +12,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.util.Set;
 
 @Service
 public class EnrichedCategoryServiceImpl implements EnrichedCategoryService {
@@ -83,6 +82,7 @@ public class EnrichedCategoryServiceImpl implements EnrichedCategoryService {
         enrichedCategoryRepository.delete(enrichedCategory);
         return true;
     }
+
 
     private EnrichedCategoryDto mapToDto(EnrichedCategory enrichedCategory){
         return modelMapper.map(enrichedCategory, EnrichedCategoryDto.class);

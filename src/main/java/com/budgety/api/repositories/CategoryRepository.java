@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findByNameAndUserId(String name, Long userId);
     Optional<Category> findByIdAndUserId(Long id, Long userId);
+    @Query("select case when (count(c)>0) then true else false end from Category c where c.user.id=:userId and c.name=:name")
+    boolean existsByNameAndUserId(String name, Long userId);
     @Query("select c from Category c where c.id in (:ids) and c.user.id = (:userId)")
     List<Category> findAllByIdsAndUserId(Iterable<Long> ids, Long userId);
     @Query("select c from Category c where c.user.id = (:userId)")

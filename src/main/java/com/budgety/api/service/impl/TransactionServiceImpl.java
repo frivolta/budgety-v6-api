@@ -1,22 +1,24 @@
 package com.budgety.api.service.impl;
 
-import com.budgety.api.entity.Category;
-import com.budgety.api.entity.Transaction;
-import com.budgety.api.entity.User;
+import com.budgety.api.components.UpdaterComponent;
+import com.budgety.api.entity.*;
 import com.budgety.api.exceptions.ResourceNotFoundException;
 import com.budgety.api.payload.monthlyBudget.MonthlyBudgetDto;
 import com.budgety.api.payload.transaction.TransactionDto;
+import com.budgety.api.repositories.EnrichedCategoryRepository;
 import com.budgety.api.repositories.MonthlyBudgetRepository;
 import com.budgety.api.repositories.TransactionRepository;
 import com.budgety.api.service.CategoryService;
 import com.budgety.api.service.MonthlyBudgetService;
 import com.budgety.api.service.TransactionService;
 import com.budgety.api.service.UserService;
+import com.budgety.api.utils.MonthlyBudgetHelper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -33,13 +35,17 @@ public class TransactionServiceImpl implements TransactionService {
     private ModelMapper modelMapper;
     private MonthlyBudgetRepository monthlyBudgetRepository;
     private MonthlyBudgetService monthlyBudgetService;
+    private EnrichedCategoryRepository enrichedCategoryRepository;
+    private UpdaterComponent updaterComponent;
 
     @Autowired
     public TransactionServiceImpl(TransactionRepository transactionRepository,
                                   UserService userService, ModelMapper modelMapper,
                                   CategoryService categoryService,
                                   MonthlyBudgetRepository monthlyBudgetRepository,
-                                  MonthlyBudgetService monthlyBudgetService
+                                  MonthlyBudgetService monthlyBudgetService,
+                                  EnrichedCategoryRepository enrichedCategoryRepository,
+                                  UpdaterComponent updaterComponent
     ) {
         this.transactionRepository = transactionRepository;
         this.modelMapper = modelMapper;
@@ -47,6 +53,8 @@ public class TransactionServiceImpl implements TransactionService {
         this.categoryService=categoryService;
         this.monthlyBudgetRepository = monthlyBudgetRepository;
         this.monthlyBudgetService = monthlyBudgetService;
+        this.enrichedCategoryRepository = enrichedCategoryRepository;
+        this.updaterComponent = updaterComponent;
     }
 
 
@@ -63,18 +71,37 @@ public class TransactionServiceImpl implements TransactionService {
             monthlyBudgetDto.setEndDate(endDate);
             monthlyBudgetService.createMonthlyBudget(userId, monthlyBudgetDto);
         }
-        // else add transaction to monthly budget
     }
+
+    // Add a transaction to a monthly budget
 
     @Override
     public TransactionDto createTransaction(Long userId, TransactionDto transactionDto) throws ParseException {
         User user = userService.getUserEntityById(userId);
         Category category = categoryService.getCategoryEntityById(transactionDto.getCategoryId(), user.getId());
         Transaction transaction = mapToEntity(transactionDto);
+
+        // Check if monthly budget for that period exists, otherwise create one
+        checkForMonthlyBudget(userId, transaction);
+
+        // Get monthly budget using the transaction date
+        MonthlyBudget monthlyBudget = monthlyBudgetRepository.findByDate(transaction.getDate(), userId)
+                .orElseThrow(() -> new ResourceNotFoundException("monthly budget", "date", transaction.getDate().toString()));
+
+        EnrichedCategory enrichedCategory = enrichedCategoryRepository.getEnrichedCategoryByMonthlyBudgetIdAndCategoryId(
+                monthlyBudget.getId(),
+                category.getId()
+        );
+        // Create the transaction
         transaction.setUser(user);
         transaction.setCategory(category);
+        // Add the transaction to the monthly budget
+        transaction.setMonthlyBudget(monthlyBudget);
+        // Add the transaction to the enriched category
+        transaction.setEnrichedCategory(enrichedCategory);
         Transaction newTransaction = transactionRepository.save(transaction);
-        checkForMonthlyBudget(userId, newTransaction);
+
+        updaterComponent.updateTransactionEnrichedCategory(newTransaction);
         return mapToDto(newTransaction);
     }
 
@@ -82,10 +109,12 @@ public class TransactionServiceImpl implements TransactionService {
     public boolean deleteTransaction(Long expenseId, Long userId) {
         Transaction transaction = transactionRepository.findTransactionByIdAndUserId(expenseId, userId);
         transactionRepository.delete(transaction);
+        updaterComponent.updateTransactionEnrichedCategory(transaction);
         return true;
     }
 
     @Override
+    @Transactional
     public TransactionDto updateTransaction(Long userId, Long expenseId, TransactionDto transactionDto) {
         Transaction transaction = transactionRepository.findTransactionByIdAndUserId(expenseId, userId);
         Category category = categoryService.getCategoryEntityById(transactionDto.getCategoryId(), userId);
@@ -94,7 +123,8 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setDate(transactionDto.getDate());
         transaction.setCategory(category);
         transaction.setTransactionType(transactionDto.getType());
-        transactionRepository.save(transaction);
+        Transaction newTransaction = transactionRepository.save(transaction);
+        updaterComponent.updateTransactionEnrichedCategory(newTransaction);
         return mapToDto(transaction);
     }
 
@@ -116,6 +146,7 @@ public class TransactionServiceImpl implements TransactionService {
         List<Transaction> transactions = transactionRepository.findTransactionByCategoriesAndUserId(categoryIds, userId);
         return new HashSet<>(transactions);
     }
+
 
 
     private Transaction mapToEntity(TransactionDto transactionDto) {

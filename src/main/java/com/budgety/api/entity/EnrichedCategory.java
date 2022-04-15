@@ -35,4 +35,5 @@ public class EnrichedCategory extends DefaultEntity {
 
     @OneToMany(mappedBy = "enrichedCategory", fetch = FetchType.LAZY)
     private Set<Transaction> transactions;
+
 }

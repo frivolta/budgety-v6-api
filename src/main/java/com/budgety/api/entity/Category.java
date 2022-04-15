@@ -34,8 +34,5 @@ public class Category extends DefaultEntity{
 
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<CategoryWithBudget> categoriesWithBudget;
-
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<CategoryWithBudget> categoriesWithGoal;
+    private Set<EnrichedCategory> enrichedCategories;
 }

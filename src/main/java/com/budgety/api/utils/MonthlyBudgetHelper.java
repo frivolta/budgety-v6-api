@@ -8,6 +8,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MonthlyBudgetHelper {
+    private MonthlyBudget monthlyBudget;
+
+    public MonthlyBudgetHelper(MonthlyBudget monthlyBudget) {
+        this.monthlyBudget = monthlyBudget;
+    }
+
     public static Set<EnrichedCategory> generateEnrichedCategoriesFromCategories(List<Category> categories, User user, MonthlyBudget monthlyBudget) {
         return categories.stream().map((category) -> {
             EnrichedCategory enrichedCategory = new EnrichedCategory();

@@ -1,11 +1,11 @@
 package com.budgety.api.service.impl;
 
-import com.budgety.api.entity.Category;
-import com.budgety.api.entity.CategoryType;
-import com.budgety.api.entity.User;
+import com.budgety.api.entity.*;
 import com.budgety.api.exceptions.ResourceNotFoundException;
 import com.budgety.api.payload.category.CategoryDto;
 import com.budgety.api.repositories.CategoryRepository;
+import com.budgety.api.repositories.EnrichedCategoryRepository;
+import com.budgety.api.repositories.MonthlyBudgetRepository;
 import com.budgety.api.repositories.UserRepository;
 import com.budgety.api.service.CategoryService;
 import com.budgety.api.utils.DefaultCategories;
@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,13 +25,19 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
     private UserRepository userRepository;
     private ModelMapper modelMapper;
+    private EnrichedCategoryRepository enrichedCategoryRepository;
+    private MonthlyBudgetRepository monthlyBudgetRepository;
+
+
 
 
     @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository, UserRepository userRepository, ModelMapper modelMapper) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, UserRepository userRepository, ModelMapper modelMapper,EnrichedCategoryRepository enrichedCategoryRepository, MonthlyBudgetRepository monthlyBudgetRepository) {
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
+        this.enrichedCategoryRepository = enrichedCategoryRepository;
+        this.monthlyBudgetRepository= monthlyBudgetRepository;
     }
 
 
@@ -92,9 +99,31 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto createCategory(CategoryDto categoryDto, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("user", "id", userId.toString()));
+        boolean exists = categoryRepository.existsByNameAndUserId(categoryDto.getName(), userId);
+        if(exists){
+            throw new IllegalArgumentException("A category already exists with same name");
+        }
         Category category = mapToEntity(categoryDto);
         category.setUser(user);
-        categoryRepository.save(category);
+        Category savedCategory = categoryRepository.save(category);
+
+        // For every monthly budget create an enriched category with this category
+        // Find monthly budgets for user id
+        List<MonthlyBudget> monthlyBudgets = monthlyBudgetRepository.findAllByUserId(userId).
+                orElseThrow(()->new ResourceNotFoundException("monthly budget", "user id", userId.toString()));
+        monthlyBudgets.stream().forEach(monthlyBudget->{
+            // Create and save a new enriched category
+            EnrichedCategory enrichedCategory = new EnrichedCategory();
+            enrichedCategory.setCategory(savedCategory);
+            enrichedCategory.setMonthlyBudget(monthlyBudget);
+            enrichedCategory.setUser(user);
+            enrichedCategory.setType(category.getType());
+            enrichedCategory.setCurrentAmount(new BigDecimal(0));
+            enrichedCategory.setBudgetOrGoal(new BigDecimal(0));
+            enrichedCategoryRepository.save(enrichedCategory);
+        });
+
+        // Add enriched category to all monthly budgets
         return mapToDto(category);
     }
 

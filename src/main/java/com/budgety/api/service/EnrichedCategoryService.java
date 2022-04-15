@@ -8,4 +8,5 @@ public interface EnrichedCategoryService {
     EnrichedCategoryDto updateEnrichedCategoryInBudget(Long userId, Long EnrichedCategoryId, EnrichedCategoryDto enrichedCategoryDto);
     EnrichedCategoryDto getEnrichedCategoryById(Long userId, Long EnrichedCategoryId);
     boolean deleteEnrichedCategory(Long userId, Long EnrichedCategoryId);
+
 }

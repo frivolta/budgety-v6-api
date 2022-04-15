@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EnrichedCategoryRepository extends JpaRepository<EnrichedCategory, Long> {
     EnrichedCategory getEnrichedCategoryByIdAndUserId(Long id, Long userId);
+    EnrichedCategory getEnrichedCategoryByMonthlyBudgetIdAndCategoryId(Long monthlyBudgetId, Long categoryId);
 }
